@@ -17,15 +17,28 @@ function Users(props) {
 	}, [])
 
 	const handleDelete = (event, id) => {
-		api()
-			.delete(`/users/${id}`)
-			.then((result) => {
-                console.log("User was deleted")
-                setUsers(users.filter(user => user.id !== id))
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+		event.preventDefault()
+
+		// get user object in case we need to restore it
+		const user = users.find((user) => user.id === id)
+
+		if (window.confirm("Are you sure you want to delete this user?")) {
+			// an optimistic update, assuming the request was successful
+			// so we don't have to wait for it to complete
+			setUsers(users.filter((user) => user.id !== id))
+
+			api()
+				.delete(`/users/${id}`)
+				.then((result) => {
+					console.log("User was deleted")
+				})
+				.catch((error) => {
+					console.log(error)
+
+					// put user back if the request wasn't successful
+					setUsers([...users, user])
+				})
+		}
 	}
 
 	return (
