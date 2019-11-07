@@ -6,23 +6,44 @@ function Users(props) {
 	const [users, setUsers] = useState([])
 
 	useEffect(() => {
-		api().get("/users")
-			.then(result => {
+		api()
+			.get("/users")
+			.then((result) => {
 				setUsers(result.data)
 			})
-			.catch(error => {
+			.catch((error) => {
 				console.log(error)
 			})
 	}, [])
+
+	const handleDelete = (event, id) => {
+		api()
+			.delete(`/users/${id}`)
+			.then((result) => {
+                console.log("User was deleted")
+                setUsers(users.filter(user => user.id !== id))
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}
 
 	return (
 		<>
 			<h1>Users</h1>
 
-			{users.map(user => (
+			{users.map((user) => (
 				<div key={user.id} className="account">
-					<Link className="account-update" to={`/users/${user.id}`}>Edit</Link>
-					
+					<Link className="account-update" to={`/users/${user.id}`}>
+						Edit
+					</Link>
+					<div
+						className="account-delete"
+						onClick={(e) => handleDelete(e, user.id)}
+					>
+						Delete
+					</div>
+
 					<div className="account-row">Name: {user.name}</div>
 					<div className="account-row">Email: {user.email}</div>
 				</div>

@@ -9,12 +9,11 @@ function UserUpdate(props) {
 	})
 
 	useEffect(() => {
-		api()
-			.get(`/users/${props.match.params.id}`)
-			.then((result) => {
+		api().get(`/users/${props.match.params.id}`)
+			.then(result => {
 				setUser(result.data)
 			})
-			.catch((error) => {
+			.catch(error => {
 				console.log(error)
 			})
 	}, [props.match.params.id])
@@ -25,41 +24,31 @@ function UserUpdate(props) {
 			[event.target.name]: event.target.value,
 		})
 	}
-	const handleSubmit = (event) => {
-		event.precentDefault()
 
-		api()
-			.put(`/users/${user.id}`, user)
-			.then((result) => {
+	const handleSubmit = (event) => {
+		event.preventDefault()
+		
+		api().put(`/users/${user.id}`, user)
+			.then(result => {
 				props.history.push("/users")
 			})
-			.catch((error) => {
+			.catch(error => {
 				console.log(error)
 			})
 	}
-}
-return (
-	<>
-		<h1>Update User</h1>
-		<form onSubmit={handleSubmit}>
-			<input
-				type="text"
-				name="name"
-				placeholder="Name"
-				value={user.name}
-				onChange={handleChange}
-			/>
-			<input
-				type="text"
-				name="email"
-				placeholder="Email"
-				value={user.email}
-				onChange={handleChange}
-			/>
 
-			<button type="submit">Save</button>
-		</form>
-	</>
-)
+	return (
+		<>
+			<h1>Update User</h1>
+
+			<form onSubmit={handleSubmit}>
+				<input type="text" name="name" placeholder="Name" value={user.name} onChange={handleChange} />
+				<input type="email" name="email" placeholder="Email" value={user.email} onChange={handleChange} />
+
+				<button type="submit">Save</button>
+			</form>
+		</>
+	)
+}
 
 export default UserUpdate
